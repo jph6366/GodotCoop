@@ -1,6 +1,28 @@
-[gd_scene load_steps=2 format=3 uid="uid://du7hlwjl6vw6l"]
+[gd_scene load_steps=5 format=3 uid="uid://du7hlwjl6vw6l"]
 
-[ext_resource type="Script" path="res://src/Main.cs" id="1_prpoe"]
+[ext_resource type="PackedScene" uid="uid://yyjg0lmqjadc" path="res://src/Player.tscn" id="1_q57q0"]
 
-[node name="Node2D" type="Node2D"]
-script = ExtResource("1_prpoe")
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_eejwy"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_da73b"]
+size = Vector3(5, 1, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_040rj"]
+size = Vector3(5, 1, 5)
+
+[node name="Main" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_eejwy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_da73b")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_040rj")
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_q57q0")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 1, 0)
