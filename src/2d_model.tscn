@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bowt57kpjehm1"]
+[gd_scene load_steps=8 format=3 uid="uid://bowt57kpjehm1"]
 
 [ext_resource type="Texture2D" uid="uid://d43sw60ib1iq" path="res://icon.png" id="1_gg0c2"]
+
+[sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_3dfi4"]
 
 [sub_resource type="Gradient" id="Gradient_x0b5f"]
 interpolation_mode = 2
@@ -9,6 +11,22 @@ colors = PackedColorArray(0.470968, 0.470968, 0.470968, 1, 2.31028e-06, 0.60603,
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_8if0n"]
 gradient = SubResource("Gradient_x0b5f")
+
+[sub_resource type="Animation" id="Animation_1koae"]
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton2D/Root:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0333333, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(7.58756, 6.1788), Vector2(8.597, 7), Vector2(7.588, 6.179)]
+}
 
 [sub_resource type="Animation" id="Animation_2wxuj"]
 resource_name = "hat_wobble"
@@ -27,21 +45,6 @@ tracks/0/keys = {
 "values": [Vector2(7.58756, 6.1788), Vector2(7.7, 6.3), Vector2(7.7, 6.3), Vector2(7.58756, 6.1788), Vector2(7.58756, 6.1788)]
 }
 
-[sub_resource type="Animation" id="Animation_1koae"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Skeleton2D/Root:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(7.58756, 6.1788)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_efv4f"]
 _data = {
 "RESET": SubResource("Animation_1koae"),
@@ -58,17 +61,18 @@ border_width = 5.0
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 scale = Vector2(0.990914, 1)
+modification_stack = SubResource("SkeletonModificationStack2D_3dfi4")
 
 [node name="Root" type="Bone2D" parent="Skeleton2D"]
 position = Vector2(50, 100)
 rotation = -1.5708
-scale = Vector2(7.58756, 6.1788)
-rest = Transform2D(-3.31663e-07, -7.58756, 6.1788, -2.70084e-07, 50, 100)
+scale = Vector2(7.588, 6.179)
+rest = Transform2D(-2.74685e-05, -7.588, 6.179, -2.23679e-05, 50, 100)
 
 [node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/Root"]
-position = Vector2(6.45794, 0.0404634)
+position = Vector2(5.66717, -0.0891028)
 rotation = 1.5708
-scale = Vector2(0.0295554, 0.0241967)
+scale = Vector2(0.0250148, 0.0204363)
 texture = ExtResource("1_gg0c2")
 
 [node name="Top" type="Bone2D" parent="Skeleton2D/Root"]
@@ -77,7 +81,7 @@ scale = Vector2(0.129813, 4.95548)
 rest = Transform2D(0.129813, 0, 0, 4.95548, 12.3887, -0.161843)
 
 [node name="Sprite2D" type="Sprite2D" parent="Skeleton2D/Root/Top"]
-position = Vector2(12.1832, 0.0146732)
+position = Vector2(-10.1527, -0.0182755)
 rotation = 1.5708
 scale = Vector2(0.00514493, 24.2455)
 texture = SubResource("GradientTexture1D_8if0n")
@@ -86,3 +90,4 @@ texture = SubResource("GradientTexture1D_8if0n")
 libraries = {
 "": SubResource("AnimationLibrary_efv4f")
 }
+autoplay = "hat_wobble"

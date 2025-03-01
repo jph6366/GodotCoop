@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://yyjg0lmqjadc"]
+[gd_scene load_steps=5 format=3 uid="uid://yyjg0lmqjadc"]
 
 [ext_resource type="Script" path="res://src/CharacterBody3d.cs" id="1_ssr48"]
 [ext_resource type="PackedScene" uid="uid://bowt57kpjehm1" path="res://src/2d_model.tscn" id="2_ngt2j"]
@@ -7,13 +7,7 @@
 radius = 0.25
 height = 1.0
 
-[sub_resource type="Environment" id="Environment_e7vmk"]
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_7o4jx"]
-
-[sub_resource type="Compositor" id="Compositor_5rhxt"]
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_m5bmd"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_egduh"]
 viewport_path = NodePath("SubViewport")
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
@@ -23,18 +17,11 @@ script = ExtResource("1_ssr48")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00125, 0)
 shape = SubResource("CapsuleShape3D_gvlfc")
 
-[node name="SpringArm3D" type="SpringArm3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38176, 1.8674)
-
-[node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
-environment = SubResource("Environment_e7vmk")
-attributes = SubResource("CameraAttributesPractical_7o4jx")
-compositor = SubResource("Compositor_5rhxt")
-
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.872513, 0.488591, 0, -0.488591, 0.872513, 0, 1.01107, 0)
 shaded = true
-texture = SubResource("ViewportTexture_m5bmd")
+alpha_cut = 2
+texture = SubResource("ViewportTexture_egduh")
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true

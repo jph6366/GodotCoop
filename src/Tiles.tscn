@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxqo142rjl6lq"]
+
+[ext_resource type="PackedScene" uid="uid://d3j3bhw74cpgc" path="res://src/assets/floor-detail.glb" id="1_pcj80"]
+[ext_resource type="PackedScene" uid="uid://cqc0mlgt5u5ct" path="res://src/assets/floor.glb" id="2_kplaq"]
+[ext_resource type="PackedScene" uid="uid://bi5k5bkclbw1a" path="res://src/assets/bricks.glb" id="3_er8f5"]
+[ext_resource type="PackedScene" uid="uid://bef64ppq8y5k1" path="res://src/assets/border-straight.glb" id="4_na6a5"]
+[ext_resource type="PackedScene" uid="uid://c26a7qxp7n6oc" path="res://src/assets/block.glb" id="5_8uuex"]
+
+[node name="Tiles" type="Node3D"]
+
+[node name="floor-detail2" parent="." instance=ExtResource("1_pcj80")]
+
+[node name="floor2" parent="." instance=ExtResource("2_kplaq")]
+
+[node name="bricks2" parent="." instance=ExtResource("3_er8f5")]
+
+[node name="border-straight2" parent="." instance=ExtResource("4_na6a5")]
+
+[node name="block2" parent="." instance=ExtResource("5_8uuex")]
