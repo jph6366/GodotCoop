@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://du7hlwjl6vw6l"]
+[gd_scene load_steps=16 format=3 uid="uid://du7hlwjl6vw6l"]
 
 [ext_resource type="PackedScene" uid="uid://yyjg0lmqjadc" path="res://src/Player.tscn" id="1_q57q0"]
 [ext_resource type="MeshLibrary" uid="uid://dva8gp182684c" path="res://src/Tiles.tres" id="2_4ah5b"]
 [ext_resource type="PackedScene" uid="uid://cuh5k3r4smn7d" path="res://src/assets/wall.glb" id="3_6t8ur"]
 [ext_resource type="PackedScene" uid="uid://xknw6k8dbjwx" path="res://rigid_body_3d.tscn" id="4_ov1pu"]
+[ext_resource type="Texture2D" uid="uid://dq07wfrool478" path="res://src/assets/273.png" id="5_ohlh7"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_eejwy"]
 
@@ -18,6 +19,84 @@ size = Vector3(38, 1, 11)
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_8ohpq"]
 
 [sub_resource type="Compositor" id="Compositor_65xpm"]
+
+[sub_resource type="Shader" id="Shader_s5xhj"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.3.stable.mono's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_nearest, repeat_enable;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_nearest, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_nearest, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec4 backlight : source_color;
+uniform sampler2D texture_backlight : hint_default_black, filter_nearest, repeat_enable;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+	
+	vec3 cam_origin = INV_VIEW_MATRIX[3].xyz;
+	vec3 spr_origin = MODEL_MATRIX[3].xyz;
+	
+	vec3 basis_z = normalize(cam_origin - spr_origin);
+	
+	vec3 basis_y = MODEL_MATRIX[1].xyz;
+	vec3 basis_x = normalize(cross(basis_y, basis_z));
+	
+	mat4 new_mat = MODEL_MATRIX;
+	new_mat[0].xyz = basis_x;
+	new_mat[2].xyz = basis_z;
+	
+	MODELVIEW_MATRIX = VIEW_MATRIX * new_mat;
+	
+	
+	
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo_tex.rgb;
+	ALPHA = albedo_tex.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oygmc"]
+render_priority = 0
+shader = SubResource("Shader_s5xhj")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/backlight = Color(1, 1, 1, 1)
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_albedo = ExtResource("5_ohlh7")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gjbpn"]
+size = Vector2(5.66, 3.93)
+orientation = 2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qpomq"]
 
 [node name="Main" type="Node3D"]
 
@@ -62,3 +141,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0419358, 0.0243347, -9.077
 
 [node name="RigidBody3D" parent="." instance=ExtResource("4_ov1pu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.30418, 2.77497, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.79076, 1.77975, -5.41207)
+material_override = SubResource("ShaderMaterial_oygmc")
+ignore_occlusion_culling = true
+mesh = SubResource("PlaneMesh_gjbpn")
+
+[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
+gravity_space_override = 1
+gravity = -9.8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+physics_interpolation_mode = 1
+shape = SubResource("SphereShape3D_qpomq")

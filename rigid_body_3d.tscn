@@ -1,23 +1,29 @@
 [gd_scene load_steps=5 format=3 uid="uid://xknw6k8dbjwx"]
 
+[ext_resource type="Script" path="res://BillboardDisc.cs" id="1_lx5w5"]
 [ext_resource type="Texture2D" uid="uid://cuplhlwe1cjm6" path="res://src/assets/disc.png" id="1_wcpls"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_0k7hj"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_dex4f"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_dhiaw"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_w7pop"]
-
 [node name="RigidBody3D" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
-shape = SubResource("SphereShape3D_0k7hj")
+transform = Transform3D(0.42, 0, 0, 0, -0.00227244, -0.419994, 0, 0.419994, -0.00227244, 0, 0, 0)
+rotation_edit_mode = 1
+shape = SubResource("SphereShape3D_dex4f")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
+rotation_edit_mode = 2
+billboard = 2
 texture = SubResource("ViewportTexture_dhiaw")
+script = ExtResource("1_lx5w5")
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true
@@ -30,10 +36,3 @@ position = Vector2(0.875, 0)
 clip_children = 2
 position = Vector2(25, 25)
 texture = ExtResource("1_wcpls")
-
-[node name="Area2D" type="Area2D" parent="SubViewport/Node2D"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SubViewport/Node2D/Area2D"]
-position = Vector2(25, 25)
-scale = Vector2(2, 2)
-shape = SubResource("CircleShape2D_w7pop")

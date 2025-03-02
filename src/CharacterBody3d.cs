@@ -51,31 +51,48 @@ public partial class CharacterBody3d : CharacterBody3D
 			KinematicCollision3D collision = GetSlideCollision(i);
 			if (collision.GetCollider() is RigidBody3D rigidBody)
 			{
-				//Vector3 throwDirection = new Vector3(0.2f, 0, -1); // Always throw forward with slight upward arc
 				Vector3 throwDirection = new Vector3(1, 0.2f, 0); // Rightward with slight upward arc
-
 				ApplyFrisbeeForces(rigidBody, throwDirection);
 			}
+			else if (collision.GetCollider() is MeshInstance3D meshInstance)
+			{
+				Vector3 throwDirection = new Vector3(1, 0.2f, 0);
+				ApplyFrisbeeForces(meshInstance, throwDirection);
+			}
+
 		}
 	}
 
-	private void ApplyFrisbeeForces(RigidBody3D frisbee, Vector3 throwDirection)
+	private void ApplyFrisbeeForces(Node3D frisbee, Vector3 throwDirection)
+{
+	throwDirection = throwDirection.Normalized(); // Ensure it's a unit vector
+	float speed = FrisbeeForce; // Use a fixed speed
+
+	// Calculate lift force
+	float angleOfAttack = Mathf.Atan2(throwDirection.Y, speed);
+	float liftMagnitude = LiftCoefficient * speed * speed * Mathf.Sin(angleOfAttack);
+	Vector3 lift = new Vector3(0, liftMagnitude, 0);
+
+	// Calculate drag force
+	float dragMagnitude = DragCoefficient * speed * speed;
+	Vector3 drag = -throwDirection * dragMagnitude;
+
+	Vector3 finalVelocity = (throwDirection * speed) + lift + drag;
+
+	if (frisbee is RigidBody3D rigidBody)
 	{
-		throwDirection = throwDirection.Normalized(); // Ensure it's a unit vector
-		float speed = FrisbeeForce; // Use a fixed speed
-
-		// Calculate lift force
-		float angleOfAttack = Mathf.Atan2(throwDirection.Y, speed);
-		float liftMagnitude = LiftCoefficient * speed * speed * Mathf.Sin(angleOfAttack);
-		Vector3 lift = new Vector3(0, liftMagnitude, 0);
-
-		// Calculate drag force
-		float dragMagnitude = DragCoefficient * speed * speed;
-		Vector3 drag = -throwDirection * dragMagnitude;
-
-		// Apply forces to frisbee
-		frisbee.ApplyImpulse((throwDirection * speed) + lift + drag);
-		frisbee.AngularVelocity = new Vector3(0, FrisbeeSpin, 0);
+		rigidBody.ApplyImpulse(finalVelocity);
+		rigidBody.AngularVelocity = new Vector3(0, FrisbeeSpin, 0);
 	}
+	else if (frisbee is MeshInstance3D meshInstance)
+	{
+		// Simulate motion for MeshInstance3D by modifying its transform
+		meshInstance.GlobalTransform = new Transform3D(
+			meshInstance.GlobalTransform.Basis,
+			meshInstance.GlobalTransform.Origin + finalVelocity * (float)GetProcessDeltaTime()
+		);
+	}
+}
+
 
 }
